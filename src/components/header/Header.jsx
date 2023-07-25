@@ -1,13 +1,17 @@
+import { useContext } from "react";
 import logo from "../../assets/images/vetbeeIcon.svg";
 import {
   StyledLinksDiv,
   StyledNavigation,
   StyledTitleDiv,
 } from "./Header.styled";
-import { Link, Typography, Button } from "@mui/material";
+import { Link, Typography, Button, Box, Switch } from "@mui/material";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+import { DarkModeContext } from "../../contexts/DarkModeContext";
 
 const Header = () => {
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+
   const { pathname } = useLocation();
 
   const pathnameForDataSelection = pathname.replace(/[0-9]/g, "");
@@ -54,6 +58,12 @@ const Header = () => {
       </StyledNavigation>
       <StyledTitleDiv>
         <Typography variant="h3">{routeData().title}</Typography>
+        <StyledLinksDiv>
+          <Box alignSelf="center">
+            <Typography paragraph>Toggle dark mode</Typography>
+            <Switch checked={darkMode} onChange={toggleDarkMode} />
+          </Box>
+        </StyledLinksDiv>
         <StyledLinksDiv>
           {routeData().buttons.map((button) => (
             <Button key={button} variant="contained">
