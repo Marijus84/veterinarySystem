@@ -1,17 +1,22 @@
-import { routes } from "./routes";
-import { RouterProvider } from "react-router-dom";
-import { ThemeProvider, CssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { darkTheme, theme } from "./themes";
-import { useContext } from "react";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DarkModeContext } from "./contexts/DarkModeContext";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { RouterProvider } from "react-router-dom";
+import { routes } from "./routes";
+import { useContext } from "react";
 
 const App = () => {
   const { darkMode } = useContext(DarkModeContext);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : theme}>
-      <CssBaseline />
-      <RouterProvider router={routes} />;
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <CssBaseline />
+        <RouterProvider router={routes} />
+      </LocalizationProvider>
     </ThemeProvider>
   );
 };

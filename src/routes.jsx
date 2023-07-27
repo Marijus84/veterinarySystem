@@ -1,7 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import HealthLogsPage from "./pages/healt-logs-page/HealthLogsPage";
+import Medications from "./pages/medications-page/Medications";
 import PageTemplate from "./layouts/page-template/PageTemplate";
 import PetListPage from "./pages/pet-list-page/PetListPage";
-import HealthLogsPage from "./pages/healt-logs-page/HealthLogsPage";
+import PrescriptionsPage from "./pages/prescriptions-page/PrescriptionsPage";
+import { createBrowserRouter } from "react-router-dom";
 
 export const routes = createBrowserRouter([
   {
@@ -10,12 +12,20 @@ export const routes = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <PetListPage />,
+        element: <PetListPage />
       },
       {
         path: "/healthLogs/:id",
-        element: <HealthLogsPage />,
+        element: <HealthLogsPage />
       },
-    ],
-  },
+      {
+        path: "/prescriptions/:id",
+        element: <PrescriptionsPage />
+      },
+      {
+        path: "/medications",
+        element: <Medications />
+      }
+    ]
+  }
 ]);
