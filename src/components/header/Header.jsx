@@ -1,40 +1,16 @@
-import { useContext } from "react";
+import { StyledLinksDiv, StyledNavigation } from "./Header.styled";
+
+import { Link } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import logo from "../../assets/images/vetbeeIcon.svg";
-import {
-  StyledLinksDiv,
-  StyledNavigation,
-  StyledTitleDiv,
-} from "./Header.styled";
-import { Link, Typography, Button, Box, Switch } from "@mui/material";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import { DarkModeContext } from "../../contexts/DarkModeContext";
 
 const Header = () => {
-  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  // const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
 
-  const { pathname } = useLocation();
-
-  const pathnameForDataSelection = pathname.replace(/[0-9]/g, "");
-
-  const routeData = () => {
-    switch (pathnameForDataSelection) {
-      case "/":
-        return {
-          links: ["Pets", "Medications"],
-          title: "Pet List",
-          buttons: ["Add pet"],
-        };
-      case "/healthLogs/":
-        return {
-          links: ["Pets", "Logs"],
-          title: "Health Records",
-          buttons: ["Add prescription", "Add log"],
-        };
-
-      default:
-        break;
-    }
-  };
+  const links = [
+    { title: "Pets", to: "/" },
+    { title: "Medications", to: "/medications" }
+  ];
 
   return (
     <>
@@ -43,20 +19,20 @@ const Header = () => {
           <img src={logo} alt="vetbee logo" />
         </Link>
         <StyledLinksDiv>
-          {routeData().links.map((link) => (
+          {links.map(link => (
             <Link
-              key={link}
+              key={link.title}
               underline="none"
               fontWeight={600}
               component={RouterLink}
-              to="/"
+              to={link.to}
             >
-              {link}
+              {link.title}
             </Link>
           ))}
         </StyledLinksDiv>
       </StyledNavigation>
-      <StyledTitleDiv>
+      {/* <StyledTitleDiv>
         <Typography variant="h3">{routeData().title}</Typography>
         <StyledLinksDiv>
           <Box alignSelf="center">
@@ -71,7 +47,7 @@ const Header = () => {
             </Button>
           ))}
         </StyledLinksDiv>
-      </StyledTitleDiv>
+      </StyledTitleDiv> */}
     </>
   );
 };

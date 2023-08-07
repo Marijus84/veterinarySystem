@@ -5,29 +5,29 @@ import {
   LinearProgress,
   Typography
 } from "@mui/material";
-import { createPetLog, getPetLogs } from "../../api/v1";
+import { createPrescription, getPetPrescriptions } from "../../api/v1";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import AddLogDialog from "./AddLogDialog";
+import AddPrescriptionDialog from "./AddPrescriptionDialog";
 import PageHeader from "../../components/PageHeader";
 import { StyledCardContainer } from "../pet-list-page/PetListPage.styled";
 
-const HealthLogPage = () => {
+const PrescriptionsPage = () => {
   const { id } = useParams();
   const { state } = useLocation();
 
-  const [logs, setLogs] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const fetchPetLogs = async id => {
+  const fetchPetPrescriptions = async id => {
     setIsLoading(true);
     try {
-      const { data } = await getPetLogs(id);
+      const { data } = await getPetPrescriptions(id);
 
-      setLogs(data);
+      setPrescriptions(data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -36,26 +36,23 @@ const HealthLogPage = () => {
   };
 
   useEffect(() => {
-    fetchPetLogs(id);
+    fetchPetPrescriptions(id);
   }, [id]);
 
   const handleCreateLog = async body => {
     setIsLoading(true);
     try {
-      const response = await createPetLog({
+      const response = await createPrescription({
         pet_id: id,
-        description: body.description,
-        status: body.status
+        ...body
       });
 
-      setLogs(prev => [
+      setPrescriptions(prev => [
         ...prev,
         {
+          ...body,
           id: response.lastID,
-          pet_id: id,
-          description: body.description,
-          status: body.status,
-          dob: new Date().getTime()
+          pet_id: id
         }
       ]);
 
@@ -69,32 +66,32 @@ const HealthLogPage = () => {
 
   return (
     <>
-      <PageHeader title={`${state.name}: Health Records`}>
+      <PageHeader title={`${state.name}: Prescriptions`}>
         <Button
           variant="contained"
           size="medium"
           onClick={() => setIsDialogOpen(true)}
         >
-          Add Log
+          Add Prescription
         </Button>
       </PageHeader>
       {isLoading && <LinearProgress />}
 
       <StyledCardContainer>
-        {logs.map((log, idx) => (
-          <Card key={`${log.id}_${idx}`} variant="outlined">
+        {prescriptions.map((prescription, idx) => (
+          <Card key={`${prescription.id}_${idx}`} variant="outlined">
             <CardContent>
-              <Typography variant="h4"> {log.status}</Typography>
-              <Typography paragraph>{log.description}</Typography>
-              <Typography paragraph>
-                {new Date(log.dob).toISOString().substring(0, 10)}
-              </Typography>
+              <Typography variant="h4"> {prescription.status}</Typography>
+              <Typography paragraph>{prescription.description}</Typography>
+              {/* <Typography paragraph>
+                {new Date(prescription.dob).toISOString().substring(0, 10)}
+              </Typography> */}
             </CardContent>
           </Card>
         ))}
       </StyledCardContainer>
       {isDialogOpen && (
-        <AddLogDialog
+        <AddPrescriptionDialog
           open={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
           loading={isLoading}
@@ -105,4 +102,4 @@ const HealthLogPage = () => {
   );
 };
 
-export default HealthLogPage;
+export default PrescriptionsPage;
